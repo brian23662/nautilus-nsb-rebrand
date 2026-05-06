@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ──────────────────────────────────────────────
+   ROOT VARIABLES & RESETS
+   Custom CSS vars sit alongside Tailwind so we
+   can use them inside Framer Motion / inline.
+   ────────────────────────────────────────────── */
+:root {
+  --color-ink: #000000;
+  --color-char: #0d0d0e;
+  --color-steel: #1a1a1c;
+  --color-ash: #333333;          /* dark gray from spec */
+  --color-bone: #ffffff;
+  --color-sky: #6cbbde;          /* primary accent */
+  --color-deep: #216081;         /* depth */
+  --color-sand: #c29e6a;         /* warm secondary */
+  --max-w: 84rem;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-ink);
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Selection — brand accent */
+::selection {
+  background: var(--color-sky);
+  color: var(--color-ink);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-char);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-deep);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sky);
+}
+
+/* ──────────────────────────────────────────────
+   GRAIN OVERLAY — adds film texture site-wide.
+   Pure SVG noise rendered as a fixed-position
+   pseudo-element. Subtle but constant.
+   ────────────────────────────────────────────── */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 100;
+  animation: grain 8s steps(10) infinite;
+}
+
+/* ──────────────────────────────────────────────
+   MARQUEE — used in About strip
+   doubled content so it loops seamlessly
+   ────────────────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+/* ──────────────────────────────────────────────
+   UNDERLINE LINK — animated underline reveal
+   ────────────────────────────────────────────── */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ──────────────────────────────────────────────
+   BUTTON — primary brand button with arrow slide
+   ────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.6rem;
+  background: var(--color-sky);
+  color: var(--color-ink);
+  font-family: var(--font-inter);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.btn-primary:hover {
+  background: var(--color-bone);
+  transform: translateY(-2px);
+}
+.btn-primary svg {
+  transition: transform 0.3s ease;
+}
+.btn-primary:hover svg {
+  transform: translateX(4px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.6rem;
+  background: transparent;
+  color: var(--color-bone);
+  font-family: var(--font-inter);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--color-sky);
+  color: var(--color-sky);
+}
+
+/* ──────────────────────────────────────────────
+   3D HOVER CARD — used by service cards
+   uses CSS perspective + translateZ on inner
+   layers; the JS in the component sets tilt vars
+   ────────────────────────────────────────────── */
+.tilt-card {
+  perspective: 1200px;
+}
+.tilt-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ──────────────────────────────────────────────
+   FOCUS — keyboard accessibility
+   ────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 3px;
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
